@@ -7,10 +7,10 @@ const generateCatThumb = function() {
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
-    }
+    },
   };
   return fetch(apiUrl, fetchOptions)
-    .then(function(response) {
+    .then((response) => {
       return response.json();
     });
 };
@@ -19,7 +19,7 @@ const generateCatThumb = function() {
 const getRandomInt = function(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
 };
 
 const catChatPhrases = [
@@ -29,20 +29,13 @@ const catChatPhrases = [
   'ネコを溺愛している症状：ネコが悪態をつくと、止めるどころか撮影を始めるって',
   '深い深い、海のように深いご縁がありましたね。',
   'いい子、いい子。',
-  'にゃんすた'
+  'にゃんすた',
 ];
 
 const generateRandomCatChatPhrase = function() {
   const randomIndex = getRandomInt(0, catChatPhrases.length);
-  return  getRandom().then(data => catChatPhrases[randomIndex] + data.emoji);
+  return catChatPhrases[randomIndex];
 };
-
-function getRandom() {
-  return fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/')
-    .then(response => {
-      return response.json()
-    });
-}
 
 // see https://market.mashape.com/blaazetech/robohash-image-generator
 const generateRobotThumb = function() {
@@ -54,12 +47,12 @@ const generateRobotThumb = function() {
     headers: {
       'Content-Type': 'application/json',
       'X-Mashape-Key': apiKey,
-      mode: "cors",
-    }
+      "mode": 'cors',
+    },
   };
 
   return fetch(apiUrl, fetchOptions)
-    .then(function(response) {
+    .then((response) => {
       return response.json();
     });
 };
@@ -90,20 +83,34 @@ const renderPost = function(robotThumbUrl, catThumbUrl, catChatPhrase) {
   containerEl.appendChild(postEl);
 };
 
+const promiseFirst = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
+const promiseSecond = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
+const promiseThird = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
+const promiseFourth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
+const promiseFifth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
+
 // "async"キーワードの説明： https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/async_function
 const addPost = async function() {
   Promise.all([
     generateRobotThumb(),
     generateCatThumb(),
     generateRandomCatChatPhrase(),
-  ])
-  .then(function(resultsArray) {
-    [robotThumb, catThumb, catChatPhrase] = resultsArray;
-    //　上の行はこの書き方の略、意味的に同じです：
-    // const robotThumb = resultsArray[0];
-    // const catThumb = resultsArray[1];
-    // 「分割代入」と呼びます。https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-    renderPost(robotThumb.imageUrl, catThumb[0].url, catChatPhrase);
+    promiseFirst,
+    promiseSecond,
+    promiseThird,
+    promiseFourth,
+    promiseFifth,
+  ]).then((resultsArray) => {
+    [robotThumb, catThumb, catChatPhrase, emojiFirst, emojiSecond, emojiThird, emojiFourth, emojiFifth] = resultsArray;;
+    const radomEmojiArray = [];
+    for (let i = 3; i <= Math.floor(Math.random() * (7 - 3)) + 3; i++) {
+      radomEmojiArray.push(resultsArray[i]);
+    }
+    const newCatChatPhrase = radomEmojiArray.reduce((ac, cur) => {
+      return ac + cur.emoji;
+    }, catChatPhrase);
+    console.log(newCatChatPhrase);
+    renderPost(robotThumb.imageUrl, catThumb[0].url, newCatChatPhrase);
   });
 };
 
