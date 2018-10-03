@@ -37,11 +37,9 @@ const generateRandomCatChatPhrase = function() {
   return catChatPhrases[randomIndex];
 };
 
-// see https://market.mashape.com/blaazetech/robohash-image-generator
 const generateRobotThumb = function() {
   const apiKey = 'vdaU35425amshse8ir7sxh0qJqFzp1xAvXIjsnVRIdRQsxES8o';
   const randomText = Math.random().toString(36).substring(2);
-  // "テンプレート文字列": https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/template_strings
   const apiUrl = `https://robohash.p.mashape.com/index.php?text=${randomText}`;
   const fetchOptions = {
     headers: {
@@ -60,36 +58,39 @@ const generateRobotThumb = function() {
 const renderPost = function(robotThumbUrl, catThumbUrl, catChatPhrase) {
   const containerEl = document.querySelector('#container .chats');
 
-  // ポストの枠である要素
   const postEl = document.createElement('DIV');
-
-  // ロボットのプロフィール画像要素
   const robotThumbEl = document.createElement('IMG');
   robotThumbEl.src = robotThumbUrl;
 
-  // ロボットが飼っているにゃんちゃんのプロフィール画像要素
   const catThumbEl = document.createElement('IMG');
   catThumbEl.src = catThumbUrl;
 
   const catChatPhraseEl = document.createElement('P');
   catChatPhraseEl.innerHTML = catChatPhrase;
 
-  // ポストの子要素を組み合わせる（次々と追加していく）
   postEl.appendChild(robotThumbEl);
   postEl.appendChild(catThumbEl);
   postEl.appendChild(catChatPhraseEl);
 
-  // 枠要素にポストを追加する
   containerEl.appendChild(postEl);
 };
 
-const promiseFirst = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
-const promiseSecond = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
-const promiseThird = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
-const promiseFourth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
-const promiseFifth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => { return response.json(); });
+const promiseFirst = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
+  return response.json();
+});
+const promiseSecond = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
+  return response.json();
+});
+const promiseThird = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
+  return response.json();
+});
+const promiseFourth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
+  return response.json();
+});
+const promiseFifth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
+  return response.json();
+});
 
-// "async"キーワードの説明： https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/async_function
 const addPost = async function() {
   Promise.all([
     generateRobotThumb(),
@@ -101,15 +102,14 @@ const addPost = async function() {
     promiseFourth,
     promiseFifth,
   ]).then((resultsArray) => {
-    [robotThumb, catThumb, catChatPhrase, emojiFirst, emojiSecond, emojiThird, emojiFourth, emojiFifth] = resultsArray;;
+    [robotThumb, catThumb, catChatPhrase, emojiFirst, emojiSecond, emojiThird, emojiFourth, emojiFifth] = resultsArray;
     const radomEmojiArray = [];
-    for (let i = 3; i <= Math.floor(Math.random() * (7 - 3)) + 3; i++) {
+    for (let i = 3; i <= Math.floor(Math.random() * (7 - 3)) + 3; i += 1) {
       radomEmojiArray.push(resultsArray[i]);
     }
     const newCatChatPhrase = radomEmojiArray.reduce((ac, cur) => {
       return ac + cur.emoji;
     }, catChatPhrase);
-    console.log(newCatChatPhrase);
     renderPost(robotThumb.imageUrl, catThumb[0].url, newCatChatPhrase);
   });
 };
