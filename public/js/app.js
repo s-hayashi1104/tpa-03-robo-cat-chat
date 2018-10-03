@@ -47,7 +47,7 @@ const generateRobotThumb = function() {
     headers: {
       'Content-Type': 'application/json',
       'X-Mashape-Key': apiKey,
-      "mode": 'cors',
+      'mode': 'cors',
     },
   };
 
