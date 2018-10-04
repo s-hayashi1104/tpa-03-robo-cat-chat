@@ -9,17 +9,14 @@ const generateCatThumb = function() {
       'x-api-key': apiKey,
     },
   };
-  return fetch(apiUrl, fetchOptions)
-    .then((response) => {
-      return response.json();
-    });
+  return fetch(apiUrl, fetchOptions).then(response => response.json());
 };
 
 
 const getRandomInt = function(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (max - min)) + min;
 };
 
 const catChatPhrases = [
@@ -49,10 +46,7 @@ const generateRobotThumb = function() {
     },
   };
 
-  return fetch(apiUrl, fetchOptions)
-    .then((response) => {
-      return response.json();
-    });
+  return fetch(apiUrl, fetchOptions).then(response => response.json());
 };
 
 const renderPost = function(robotThumbUrl, catThumbUrl, catChatPhrase) {
@@ -75,23 +69,13 @@ const renderPost = function(robotThumbUrl, catThumbUrl, catChatPhrase) {
   containerEl.appendChild(postEl);
 };
 
-const promiseFirst = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
-  return response.json();
-});
-const promiseSecond = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
-  return response.json();
-});
-const promiseThird = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
-  return response.json();
-});
-const promiseFourth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
-  return response.json();
-});
-const promiseFifth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then((response) => {
-  return response.json();
-});
+const promiseFirst = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then(response => response.json());
+const promiseSecond = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then(response => response.json());
+const promiseThird = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then(response => response.json());
+const promiseFourth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then(response => response.json());
+const promiseFifth = fetch('https://ranmoji.herokuapp.com/emojis/api/v.1.0/').then(response => response.json());
 
-const addPost = async function() {
+const addPost = function() {
   Promise.all([
     generateRobotThumb(),
     generateCatThumb(),
@@ -102,14 +86,13 @@ const addPost = async function() {
     promiseFourth,
     promiseFifth,
   ]).then((resultsArray) => {
-    [robotThumb, catThumb, catChatPhrase, emojiFirst, emojiSecond, emojiThird, emojiFourth, emojiFifth] = resultsArray;
+    [robotThumb, catThumb, catChatPhrase, emojiFirst,
+       emojiSecond, emojiThird, emojiFourth, emojiFifth] = resultsArray;
     const radomEmojiArray = [];
     for (let i = 3; i <= Math.floor(Math.random() * (7 - 3)) + 3; i += 1) {
       radomEmojiArray.push(resultsArray[i]);
     }
-    const newCatChatPhrase = radomEmojiArray.reduce((ac, cur) => {
-      return ac + cur.emoji;
-    }, catChatPhrase);
+    const newCatChatPhrase = radomEmojiArray.reduce((ac, cur) => ac + cur.emoji, catChatPhrase);
     renderPost(robotThumb.imageUrl, catThumb[0].url, newCatChatPhrase);
   });
 };
